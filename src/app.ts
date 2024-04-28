@@ -8,6 +8,17 @@ const data = phdata;
 const start = async (app: Application) => {
   app.use(cors());
   app.get("/", (req: Request, res: Response) => {
+    const simpledocumentation = {
+      "to get all data " : "https://ph-rpmb.vercel.app/all",
+      "to get all the regions in the Philippines " : "https://ph-rpmb.vercel.app/regions",
+      "to get all the provinces in the Philippines " : "https://ph-rpmb.vercel.app/provincelist",
+      "to get all the provinces in the specific Region " : "https://ph-rpmb.vercel.app/[name of region]/provincelist",
+      "to get all the municipality in the specific provinces " : "https://ph-rpmb.vercel.app/[name of region]/[name of province]/municipality",
+      "to get all the barangay in the specific municipalities " : "https://ph-rpmb.vercel.app/[name of region]/[name of province]/[name of municipality]/barangay",
+    }
+    res.status(200).json(simpledocumentation);
+  });
+  app.get("/all", (req: Request, res: Response) => {
     res.status(200).json(data);
   });
   //get all the regions
@@ -68,7 +79,7 @@ const start = async (app: Application) => {
         .map((filtered) => Object.keys(filtered[1].municipality_list))
         .sort()
         .flat();
-      res.json(municipalities);
+      res.status(200).json(municipalities);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -103,7 +114,7 @@ const start = async (app: Application) => {
 
         const lastfiltration = Object.values(barangay[0]).flat()
         
-        res.json(lastfiltration);
+        res.status(200).json(lastfiltration);
       } catch (error) {
         res.status(500).json(error);
       }
