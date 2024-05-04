@@ -25,6 +25,8 @@ const start = (app) => __awaiter(void 0, void 0, void 0, function* () {
             "to get all data ": "https://ph-rpmb.vercel.app/all",
             "to get all the regions in the Philippines ": "https://ph-rpmb.vercel.app/regions",
             "to get all the provinces in the Philippines ": "https://ph-rpmb.vercel.app/provincelist",
+            "to get all the municipalities in the Philippines ": "https://ph-rpmb.vercel.app/municipalitylist",
+            "to get all the barangays in the Philippines ": "https://ph-rpmb.vercel.app/baranggaylist",
             "to get all the provinces in the specific Region ": "https://ph-rpmb.vercel.app/[name of region]/provincelist",
             "to get all the municipality in the specific provinces ": "https://ph-rpmb.vercel.app/[name of region]/[name of province]/municipality",
             "to get all the barangay in the specific municipalities ": "https://ph-rpmb.vercel.app/[name of region]/[name of province]/[name of municipality]/barangay",
@@ -53,6 +55,39 @@ const start = (app) => __awaiter(void 0, void 0, void 0, function* () {
                 .map((item) => Object.keys(item.province_list))
                 .flat()
                 .sort();
+            res.status(200).json(provinces);
+        }
+        catch (error) {
+            res.status(500).json(error);
+        }
+    });
+    app.get("/municipalitylist", (req, res) => {
+        try {
+            const valuesArray = Object.values(data);
+            const provinces = valuesArray.map((item) => {
+                let heads = Object.values(item.province_list);
+                let body = Object.entries(heads[1]);
+                return Object.keys(body[0][1]);
+            }).flat().sort();
+            res.status(200).json(provinces);
+        }
+        catch (error) {
+            res.status(500).json(error);
+        }
+    });
+    app.get("/baranggaylist", (req, res) => {
+        try {
+            const valuesArray = Object.values(data);
+            const provinces = valuesArray.map((item) => {
+                let heads = Object.values(item.province_list);
+                let body = Object.entries(heads[1]);
+                let municipalities = Object.values(body[0][1]);
+                let baranggays = Object.values(municipalities).sort();
+                const test = baranggays.map((datas2) => {
+                    return datas2.barangay_list;
+                }).flat().sort();
+                return test;
+            }).flat().sort();
             res.status(200).json(provinces);
         }
         catch (error) {
